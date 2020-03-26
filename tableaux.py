@@ -85,9 +85,24 @@ def par_complementario(l):
 			literales.append(literal.get_-label())
 		
 	#Verificar que hay pares complementarios
-	literales = l
-	for lit in literales:
-		if lit==Tree("
+	lista= literales
+	lit=lista[0]
+	lista_aux=[]
+	for i in range(1,len(lista)):
+		lista_aux.append(lista[i])
+	if lit[0]!="-":
+		if "-"+lit in ista_aux:
+			return True
+		else:
+			l=lista_aux
+			par_complementario(l)
+	else:
+		if lit[-1] in lista_aux:
+			return True
+		else:
+			l=lista_aux
+			par_complementario(l)
+	return False
 
 def es_literal(f):
 	# Esta función determina si el árbol f es un literal
