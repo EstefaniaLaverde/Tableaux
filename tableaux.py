@@ -75,15 +75,27 @@ def par_complementario(l):
 	# Output: True/False
 	
 	#l es una lista de literales
-	letra_porp=l[0]
-	lista_aux
-	if "-"+letra_prop in(
+	lista= l
+	letra_porp=lista[0]
+	lista_aux=[]
+	for i in range(1,len(lista)):
+		lista_aux.append(lista[i])
+	
+	for l in
+	if "-"+letra_prop in ista_aux:
+		return True
+	else:
+		l=lista_aux
+		par_complementario(l)
 	return False
 
 def es_literal(f):
 	# Esta función determina si el árbol f es un literal
 	# Input: f, una fórmula como árbol
 	# Output: True/False
+	for letra in letrasProposicionales:
+		if f==Tree(letra,None,None):
+			return True
 	return False
 
 def no_literales(l):
@@ -91,6 +103,9 @@ def no_literales(l):
 	# solo literales
 	# Input: l, una lista de fórmulas como árboles
 	# Output: None/f, tal que f no es literal
+	for j in l:
+		for letra in letras_prop:
+			if j
 	return False
 
 def clasifica_y_extiende(f):
