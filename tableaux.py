@@ -44,7 +44,7 @@ def StringtoTree(A):
 	for cchh in A:
 		if cchh in letrasProposicionales:
 			formula.append(Tree(cchh, None, None))
-		elif cchh == "¬":
+		elif cchh == "-":
 			formula.append(Tree(cchh,None,formula[-1]))
 			del formula[-1]
 		elif cchh in conectivos_binarios:
@@ -52,8 +52,6 @@ def StringtoTree(A):
 			del formula[-1]
 			del formula[-1]
 		return formula[-1]
-	p = letrasProposicionales[0] # ELIMINE ESTA LINEA LUEGO DE INCLUIR EL CODIGO DE STRING2TREE
-	return Tree(p, None, None) # ELIMINE ESTA LINEA LUEGO DE INCLUIR EL CODIGO DE STRING2TREE
 
 ##############################################################################
 # Definición de funciones de tableaux
@@ -75,6 +73,10 @@ def par_complementario(l):
 	# contiene un par complementario
 	# Input: l, una lista de literales
 	# Output: True/False
+	
+	#l es una lista de literales
+	letra_porp=l[0]
+	if "-"+letra_prop in(
 	return False
 
 def es_literal(f):
