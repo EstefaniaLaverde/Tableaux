@@ -20,6 +20,8 @@ class Tree(object):
 		self.left = left
 		self.right = right
 		self.label = label
+	def get_label(self):
+		return self.label
 
 def Inorder(f):
     # Imprime una formula como cadena dada una formula como arbol
@@ -38,7 +40,7 @@ def StringtoTree(A):
              # letrasProposicionales, lista de letras proposicionales
     # Output: formula como tree
 
-	conectivos_binarios=["O","Y",">","<>"]
+	conectivos_binarios=["V","&","->","<->"]
 	formula=[]
 	
 	for cchh in A:
@@ -74,29 +76,33 @@ def par_complementario(l):
 	# Input: l, una lista de literales
 	# Output: True/False
 	
-	#l es una lista de literales
-	lista= l
-	letra_porp=lista[0]
-	lista_aux=[]
-	for i in range(1,len(lista)):
-		lista_aux.append(lista[i])
-	
-	for l in
-	if "-"+letra_prop in ista_aux:
-		return True
-	else:
-		l=lista_aux
-		par_complementario(l)
-	return False
+	#Crear lista de labels literales
+	literales=[]
+	for literal in l:
+		if literal.get_label()=="-":
+			literales.append("-"+(lteral.right).get_label())
+		else:
+			literales.append(literal.get_-label())
+		
+	#Verificar que hay pares complementarios
+	literales = l
+	for lit in literales:
+		if lit==Tree("
 
 def es_literal(f):
 	# Esta función determina si el árbol f es un literal
 	# Input: f, una fórmula como árbol
 	# Output: True/False
-	for letra in letrasProposicionales:
-		if f==Tree(letra,None,None):
+	for i in f:
+		if i.right==None:
 			return True
-	return False
+		elif i.label=="-":
+			if i.right.right==None:
+				return True
+			else:
+				return False
+		else:
+			return False
 
 def no_literales(l):
 	# Esta función determina si una lista de fórmulas contiene
@@ -104,9 +110,10 @@ def no_literales(l):
 	# Input: l, una lista de fórmulas como árboles
 	# Output: None/f, tal que f no es literal
 	for j in l:
-		for letra in letras_prop:
-			if j
-	return False
+		for es_literal(j)==False:
+			return False
+		else:
+			return True
 
 def clasifica_y_extiende(f):
 	# clasifica una fórmula como alfa o beta y extiende listaHojas
