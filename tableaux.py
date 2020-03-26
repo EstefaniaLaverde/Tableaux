@@ -38,8 +38,20 @@ def StringtoTree(A):
              # letrasProposicionales, lista de letras proposicionales
     # Output: formula como tree
 
-	# OJO: DEBE INCLUIR SU CÓDIGO DE STRING2TREE EN ESTA PARTE!!!!!
-
+	conectivos_binarios=["O","Y",">","<>"]
+	formula=[]
+	
+	for cchh in A:
+		if cchh in letrasProposicionales:
+			formula.append(Tree(cchh, None, None))
+		elif cchh == "¬":
+			formula.append(Tree(cchh,None,formula[-1]))
+			del formula[-1]
+		elif cchh in conectivos_binarios:
+			formula.append(Tree(cchh, formula[-1],formula[-2]))
+			del formula[-1]
+			del formula[-1]
+		return formula[-1]
 	p = letrasProposicionales[0] # ELIMINE ESTA LINEA LUEGO DE INCLUIR EL CODIGO DE STRING2TREE
 	return Tree(p, None, None) # ELIMINE ESTA LINEA LUEGO DE INCLUIR EL CODIGO DE STRING2TREE
 
