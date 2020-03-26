@@ -82,7 +82,7 @@ def par_complementario(l):
 		if literal.get_label()=="-":
 			literales.append("-"+(lteral.right).get_label())
 		else:
-			literales.append(literal.get_-label())
+			literales.append(literal.get_label())
 		
 	#Verificar que hay pares complementarios
 	lista= literales
