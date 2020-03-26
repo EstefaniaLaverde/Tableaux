@@ -76,6 +76,7 @@ def par_complementario(l):
 	
 	#l es una lista de literales
 	letra_porp=l[0]
+	lista_aux
 	if "-"+letra_prop in(
 	return False
 
