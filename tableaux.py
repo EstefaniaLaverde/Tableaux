@@ -129,12 +129,71 @@ def no_literales(l):
 			return False
 		else:
 			return True
+def alfa_beta(f):
+	if f.label=='-':
+		if (f.right).label=='-': #Doble negación
+			return '1ALFA'
+		if (f.right).label=='O': #¬(A1vA2)
+			return '3ALFA'
+		if (f.right).label=='>': #¬(A1>A2)
+			return '4ALFA'
+		if (f.right).label=='Y': #¬(B1∧B2)
+			return '1BETA'
+	elif f.label=='Y': #(A1∧ A2)
+		return '2ALFA'
+	elif f.label=='O': #(B1 ∨ B2)
+		return '2BETA'
+	elif f.label=='>':
+		return '3BETA'
+	else:
+		return 'HOJA'
 
 def clasifica_y_extiende(f):
 	# clasifica una fórmula como alfa o beta y extiende listaHojas
 	# de acuerdo a la regla respectiva
 	# Input: f, una fórmula como árbol
 	# Output: no tiene output, pues modifica la variable global listaHojas
+	for formula in f:
+		clasificacion = alfa_beta(formula)
+		if clasificacion=='HOJA':
+			if clasificacion not in lista_hojas:
+				lista_hojas.append(clasificacion)
+		elif clasificacion == '1ALFA':
+			hijo=[(f.left).left]
+			f.remove(clasificacion)
+			f.append(hijo)
+			clasifica_y_extiende(f)
+		elif clasificacion=='2ALFA':
+			hijo_izq=f.left
+			hijo_der=f.right
+			f.remove(clasificacion)
+			f.append(hijo_der)
+			f.append(hijo_izq)
+			clasifica_y_extiende(f)
+		elif clasificacion=='3ALFA':
+			hijo_izq=Tree('-',None,(f.left).left)
+			hijo_der=Tree('-',None,(f.left).right)
+			f.remove(clasificacion)
+			f.append(hijo_der)
+			f.append(hijo_izq)
+			clasifica_y_extiende(f)
+		elif clasificacion=='4ALFA':
+			hijo_izq=Tree('-',None,(f.left).left)
+			hijo_der=(f.left).right
+			f.remove(clasificacion)
+			f.append(hijo_der)
+			f.append(hijo_izq)
+			clasifica_y_extiende(f)
+		elif clasificacion=='1BETA':
+			hijo_izq=Tree('-',None,(f.left).left)
+			hijo_der=Tree('-',None,(f.left).right)
+			lista_1=f.remove(clasificacion)
+			lista_1.append(hijo_der)
+			lista_2=f.remove(clasificacion)
+			lista_2.append(hijo_izq)
+			clasifica_y_extiende(lista_1)
+			clasifica_y_extiende(lista_2)
+		elif clasificacon=='2BETA'
 	global listaHojas
 
 def Tableaux(f):
