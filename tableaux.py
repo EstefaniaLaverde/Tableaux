@@ -40,7 +40,7 @@ def StringtoTree(A):
              # letrasProposicionales, lista de letras proposicionales
     # Output: formula como tree
 
-	conectivos_binarios=["V","&","->","<->"]
+	conectivos_binarios=['V','Y','>']
 	formula=[]
 	
 	for cchh in A:
@@ -80,7 +80,7 @@ def par_complementario(l):
 	literales=[]
 	for literal in l:
 		if literal.get_label()=="-":
-			literales.append("-"+(lteral.right).get_label())
+			literales.append("-"+(literal.right).get_label())
 		else:
 			literales.append(literal.get_label())
 		
@@ -91,7 +91,7 @@ def par_complementario(l):
 	for i in range(1,len(lista)):
 		lista_aux.append(lista[i])
 	if lit[0]!="-":
-		if "-"+lit in ista_aux:
+		if "-"+lit in lista_aux:
 			return True
 		else:
 			l=lista_aux
@@ -125,7 +125,7 @@ def no_literales(l):
 	# Input: l, una lista de fórmulas como árboles
 	# Output: None/f, tal que f no es literal
 	for j in l:
-		for es_literal(j)==False:
+		if es_literal(j)==False:
 			return False
 		else:
 			return True
@@ -156,8 +156,8 @@ def clasifica_y_extiende(f):
 	for formula in f:
 		clasificacion = alfa_beta(formula)
 		if clasificacion=='HOJA':
-			if clasificacion not in lista_hojas:
-				lista_hojas.append(clasificacion)
+			if clasificacion not in listaHojas:
+				listaHojas.append(clasificacion)
 		elif clasificacion == '1ALFA':
 			hijo=[(f.left).left]
 			f.remove(clasificacion)
@@ -193,7 +193,26 @@ def clasifica_y_extiende(f):
 			lista_2.append(hijo_izq)
 			clasifica_y_extiende(lista_1)
 			clasifica_y_extiende(lista_2)
-		elif clasificacon=='2BETA'
+		elif clasificacion=='2BETA':
+			hijo_izq=f.left
+			hijo_der=f.right
+			lista_1=f.remove(clasificacion)
+			lista_1.append(hijo_der)
+			lista_2=f.remove(clasificacion)
+			lista_2.append(hijo_izq)
+			clasifica_y_extiende(lista_1)
+			clasifica_y_extiende(lista_2)
+		elif clasificacion=='3BETA':
+			hijo_izq=Tree('-',None,f.left)
+			hijo_der=f.right
+			lista_1=f.remove(clasificacion)
+			lista_1.append(hijo_der)
+			lista_2=f.remove(clasificacion)
+			lista_2.append(hijo_izq)
+			clasifica_y_extiende(lista_1)
+			clasifica_y_extiende(lista_2)
+			
+			
 	global listaHojas
 
 def Tableaux(f):
@@ -202,10 +221,18 @@ def Tableaux(f):
 	# Imput: - f, una fórmula como string en notación polaca inversa
 	# Output: interpretaciones: lista de listas de literales que hacen
 	#		 verdadera a f
+	A=StringtoTree(f)
+	
+	
+	
+	
+	
 	global listaHojas
 	global listaInterpsVerdaderas
 
-	A = string2Tree(f)
 	listaHojas = [[A]]
 
 	return listaInterpsVerdaderas
+
+
+
