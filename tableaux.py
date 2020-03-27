@@ -40,20 +40,21 @@ def StringtoTree(A):
              # letrasProposicionales, lista de letras proposicionales
     # Output: formula como tree
 
-	conectivos_binarios=['V','Y','>']
-	formula=[]
-	
-	for cchh in A:
-		if cchh in letrasProposicionales:
-			formula.append(Tree(cchh, None, None))
-		elif cchh == "-":
-			formula.append(Tree(cchh,None,formula[-1]))
-			del formula[-1]
-		elif cchh in conectivos_binarios:
-			formula.append(Tree(cchh, formula[-1],formula[-2]))
-			del formula[-1]
-			del formula[-1]
-		return formula[-1]
+    Conectivos = ['O','Y','>']
+    Pila = []
+    for c in A:
+        if c in letrasProposicionales:
+            Pila.append(Tree(c,None,None))
+        elif c == '-':
+            FormulaAux = Tree (c,None,Pila[-1])
+            del Pila[-1]
+            Pila.append(FormulaAux)
+        elif c in Conectivos:
+            FormulaAux = Tree (c, Pila[-1], Pila[-2])
+            del Pila[-1]
+            del Pila[-1]
+            Pila.append(FormulaAux)
+    return Pila[-1]
 
 ##############################################################################
 # Definición de funciones de tableaux
@@ -76,68 +77,62 @@ def par_complementario(l):
 	# Input: l, una lista de literales
 	# Output: True/False
 	
-	#Crear lista de labels literales
-	literales=[]
-	for literal in l:
-		if literal.get_label()=="-":
-			literales.append("-"+(literal.right).get_label())
-		else:
-			literales.append(literal.get_label())
-		
-	#Verificar que hay pares complementarios
-	lista= literales
-	lit=lista[0]
-	lista_aux=[]
-	for i in range(1,len(lista)):
-		lista_aux.append(lista[i])
-	if lit[0]!="-":
-		if "-"+lit in lista_aux:
-			return True
-		else:
-			l=lista_aux
-			par_complementario(l)
-	else:
-		if lit[-1] in lista_aux:
-			return True
-		else:
-			l=lista_aux
-			par_complementario(l)
-	return False
+    #Entra de esta manera: lista=[Tree(q,None,None), Tree(-,None,Tree(p,None,None)),Tree(r,None,None)]
+
+    #Hacer una lista de la forma[p,-p,q]
+    mi_lista=[]
+    for item in l:
+        if item.label=='-':
+            mi_lista.append('-'+item.left.label)
+        else:
+            mi_lista.append(item.label)
+    #Comprobar si hay pares complementarios     
+        
+    for elem in mi_lista:
+        if elem[0]=='-':
+            complementario=elem[1]
+            if complementario in mi_lista:
+                return True
+        else:
+            complementario='-'+elem[0]
+            if complementario in mi_lista:
+                return True
+    return False
 
 def es_literal(f):
 	# Esta función determina si el árbol f es un literal
 	# Input: f, una fórmula como árbol
 	# Output: True/False
-	for i in f:
-		if i.right==None:
-			return True
-		elif i.label=="-":
-			if i.right.right==None:
-				return True
-			else:
-				return False
-		else:
-			return False
+    #El input tiene esta forma: Tree(p,None,None)
+    Conectivos = ['O','Y','>']
+    conectivos2=Conectivos.append('-')
+    if f.label in Conectivos:
+        return False
+    elif f.label=='-':
+        if f.left.label in conectivos2:
+            return False
+    return True
+    
 
 def no_literales(l):
 	# Esta función determina si una lista de fórmulas contiene
 	# solo literales
 	# Input: l, una lista de fórmulas como árboles
 	# Output: None/f, tal que f no es literal
-	for j in l:
-		if es_literal(j)==False:
-			return False
-		else:
-			return True
+    for arbol in l:
+        if es_literal(arbol)== False: #Si no es literal
+            return True
+    return False           
+
 def alfa_beta(f):
 	if f.label=='-':
-		if (f.right).label=='-': #Doble negación
+		if (f.left).label=='-': #Doble negación
 			return '1ALFA'
-		if (f.right).label=='O': #¬(A1vA2)
+		if (f.left).label=='O': #¬(A1vA2)
 			return '3ALFA'
-		if (f.right).label=='>': #¬(A1>A2)
+		if (f.left).label=='>': #¬(A1>A2)
 			return '4ALFA'
-		if (f.right).label=='Y': #¬(B1∧B2)
+		if (f.left).label=='Y': #¬(B1∧B2)
 			return '1BETA'
 	elif f.label=='Y': #(A1∧ A2)
 		return '2ALFA'
@@ -149,71 +144,71 @@ def alfa_beta(f):
 		return 'HOJA'
 
 def clasifica_y_extiende(f):
+    lista_1=f
+    lista_2=f
 	# clasifica una fórmula como alfa o beta y extiende listaHojas
 	# de acuerdo a la regla respectiva
 	# Input: f, una fórmula como árbol
 	# Output: no tiene output, pues modifica la variable global listaHojas
-	for formula in f:
-		clasificacion = alfa_beta(formula)
-		if clasificacion=='HOJA':
-			if clasificacion not in listaHojas:
-				listaHojas.append(clasificacion)
-		elif clasificacion == '1ALFA':
-			hijo=[(f.left).left]
-			f.remove(clasificacion)
-			f.append(hijo)
-			clasifica_y_extiende(f)
-		elif clasificacion=='2ALFA':
-			hijo_izq=f.left
-			hijo_der=f.right
-			f.remove(clasificacion)
-			f.append(hijo_der)
-			f.append(hijo_izq)
-			clasifica_y_extiende(f)
-		elif clasificacion=='3ALFA':
-			hijo_izq=Tree('-',None,(f.left).left)
-			hijo_der=Tree('-',None,(f.left).right)
-			f.remove(clasificacion)
-			f.append(hijo_der)
-			f.append(hijo_izq)
-			clasifica_y_extiende(f)
-		elif clasificacion=='4ALFA':
-			hijo_izq=Tree('-',None,(f.left).left)
-			hijo_der=(f.left).right
-			f.remove(clasificacion)
-			f.append(hijo_der)
-			f.append(hijo_izq)
-			clasifica_y_extiende(f)
-		elif clasificacion=='1BETA':
-			hijo_izq=Tree('-',None,(f.left).left)
-			hijo_der=Tree('-',None,(f.left).right)
-			lista_1=f.remove(clasificacion)
-			lista_1.append(hijo_der)
-			lista_2=f.remove(clasificacion)
-			lista_2.append(hijo_izq)
-			clasifica_y_extiende(lista_1)
-			clasifica_y_extiende(lista_2)
-		elif clasificacion=='2BETA':
-			hijo_izq=f.left
-			hijo_der=f.right
-			lista_1=f.remove(clasificacion)
-			lista_1.append(hijo_der)
-			lista_2=f.remove(clasificacion)
-			lista_2.append(hijo_izq)
-			clasifica_y_extiende(lista_1)
-			clasifica_y_extiende(lista_2)
-		elif clasificacion=='3BETA':
-			hijo_izq=Tree('-',None,f.left)
-			hijo_der=f.right
-			lista_1=f.remove(clasificacion)
-			lista_1.append(hijo_der)
-			lista_2=f.remove(clasificacion)
-			lista_2.append(hijo_izq)
-			clasifica_y_extiende(lista_1)
-			clasifica_y_extiende(lista_2)
-			
-			
-	global listaHojas
+    global listaHojas
+    for formula in f:
+        clasificacion = alfa_beta(formula)
+        if clasificacion=='HOJA':
+            if clasificacion not in listaHojas:
+                listaHojas.append(formula)
+        elif clasificacion == '1ALFA':
+            hijo=[(f.left).left]
+            f.remove(formula)
+            f.append(hijo)
+            clasifica_y_extiende(f)
+        elif clasificacion=='2ALFA':
+            hijo_izq=formula.left
+            hijo_der=formula.right
+            f.remove(formula)
+            f.append(hijo_der)
+            f.append(hijo_izq)
+            clasifica_y_extiende(f)
+        elif clasificacion=='3ALFA':
+            hijo_izq=Tree('-',None,(f.left).left)
+            hijo_der=Tree('-',None,(f.left).right)
+            f.remove(formula)
+            f.append(hijo_der)
+            f.append(hijo_izq)
+            clasifica_y_extiende(f)
+        elif clasificacion=='4ALFA':
+            hijo_izq=Tree('-',None,(f.left).left)
+            hijo_der=(f.left).right
+            f.remove(formula)
+            f.append(hijo_der)
+            f.append(hijo_izq)
+            clasifica_y_extiende(f)
+        elif clasificacion=='1BETA':
+            hijo_izq=Tree('-',None,(f.left).left)
+            hijo_der=Tree('-',None,(f.left).right)
+            f.remove(formula)
+            lista_1.append(hijo_der)
+            f.remove(formula)
+            lista_2.append(hijo_izq)
+            clasifica_y_extiende(lista_1)
+            clasifica_y_extiende(lista_2)
+        elif clasificacion=='2BETA':
+            hijo_izq=f.left
+            hijo_der=f.right
+            f.remove(formula)
+            lista_1.append(hijo_der)
+            f.remove(formula)
+            lista_2.append(hijo_izq)
+            clasifica_y_extiende(lista_1)
+            clasifica_y_extiende(lista_2)
+        elif clasificacion=='3BETA':
+            hijo_izq=Tree('-',None,f.left)
+            hijo_der=f.right
+            f.remove(formula)
+            lista_1.append(hijo_der)
+            f.remove(formula)
+            lista_2.append(hijo_izq)
+            clasifica_y_extiende(lista_1)
+            clasifica_y_extiende(lista_2)
 
 def Tableaux(f):
 
@@ -233,6 +228,6 @@ def Tableaux(f):
 	listaHojas = [[A]]
 
 	return listaInterpsVerdaderas
-
-
-
+A=Tree('Y',Tree('p',None,None),Tree('q',None,None))
+lista=[A]
+clasifica_y_extiende(lista)
