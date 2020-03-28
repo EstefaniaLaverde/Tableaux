@@ -163,7 +163,7 @@ def clasifica_y_extiende(f):
 	# Input: f, una fórmula como árbol
 	# Output: no tiene output, pues modifica la variable global listaHojas
 	global listaHojas
-	listaHojas=[f]
+	listaHojas=[[f]]
 	for q in listaHojas:
 		clasificacion = alfa_beta(f)
 	  	if clasificacion=='HOJA':
