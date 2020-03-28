@@ -163,54 +163,52 @@ def clasifica_y_extiende(f):
 	# Output: no tiene output, pues modifica la variable global listaHojas
 	global listaHojas
 	listaHojas=[[f]]
-	for k in listaHojas:
-		for q in k:
-			clasificacion = alfa_beta(f)
-			if clasificacion=='HOJA':
-				listaHojas.remove([q])
-				lista_hojas.append(q)
-			elif clasificacion == '1ALFA':
-				hijo=[(q.right).right]
-				listaHojas.remove([q])
-				listaHojas.append(hijo)
-			elif clasificacion=='2ALFA':
-				hijo_izq=[q.left]
-				hijo_der=[q.right]
-				listaHojas.remove([q])
-				lis=[hijo_izq,hijo_der]
-				listaHojas.append(lis)
-			elif clasificacion=='3ALFA':
-				hijo_izq=[Tree('-',None,(q.right).left)]
-				hijo_der=[Tree('-',None,(q.right).right)]
-				listaHojas.remove([q])
-				lis=[hijo_izq,hijo_der]
-				listaHojas.append(lis)
-			elif clasificacion=='4ALFA':
-				hijo_izq=[(q.right).left]
-				hijo_der=[Tree('-',None,(q.right).right)]
-				listaHojas.remove([q])
-				lis=[hijo_izq,hijo_der]
-				listaHojas.append(lis)
-			elif clasificacion=='1BETA':
-				hijo_izq=[Tree('-',None,(q.right).left)]
-				hijo_der=[Tree('-',None,(q.right).right)]
-				listaHojas.remove([q])
-				listaHojas.append(hijo_der)
-				listaHojas.append(hijo_der)
-			elif clasificacion=='2BETA':
-				hijo_izq=[q.left]
-				hijo_der=[q.right]
-				listaHojas.remove([q])
-				listaHojas.append(hijo_der)
-				listaHojas.append(hijo_der)
-			elif clasificacion=='3BETA':
-				hijo_izq=[Tree('-', None, q.left)]
-				hijo_der=[q.right]
-				listaHojas.remove([q])
-				listaHojas.append(hijo_der)
-				listaHojas.append(hijo_der)
+	print(imprime_hoja(listaHojas[0]))
+	clasificacion = alfa_beta(f)
+	if clasificacion=='HOJA':
+		listaHojas.remove([f])
+		listaHojas.append(f)
+	elif clasificacion == '1ALFA':
+		hijo=[(f.right).right]
+		listaHojas.remove([f])
+		listaHojas.append(hijo)
+	elif clasificacion=='2ALFA':
+	  	hijo_izq=f.left
+	  	hijo_der=f.right
+	  	listaHojas.remove([f])
+	  	lis=[hijo_izq,hijo_der]
+	  	listaHojas.append(lis)
+	elif clasificacion=='3ALFA':
+	  	hijo_izq=Tree('-',None,(f.right).left)
+	  	hijo_der=Tree('-',None,(f.right).right)
+	  	listaHojas.remove([f])
+	  	lis=[hijo_izq,hijo_der]
+	  	listaHojas.append(lis)
+	elif clasificacion=='4ALFA':
+	  	hijo_izq=(f.right).left
+	  	hijo_der=Tree('-',None,(f.right).right)
+	  	listaHojas.remove([f])
+	  	lis=[hijo_izq,hijo_der]
+	  	listaHojas.append(lis)
+	elif clasificacion=='1BETA':
+	  	hijo_izq=[Tree('-',None,(f.right).left)]
+	  	hijo_der=[Tree('-',None,(f.right).right)]
+	  	listaHojas.remove([f])
+	  	listaHojas.append(hijo_izq)
+	  	listaHojas.append(hijo_der)
+	elif clasificacion=='2BETA':
+	  	hijo_izq=[f.left]
+	  	hijo_der=[f.right]
+	  	listaHojas.remove([f])
+	  	listaHojas.append(hijo_izq)
+	  	listaHojas.append(hijo_der)
+	elif clasificacion=='3BETA':
+	  	hijo_izq=[Tree('-', None, f.left)]
+	  	hijo_der=[f.right]
+	  	listaHojas.remove([f])
+	  	listaHojas.append(hijo_izq)
+	  	listaHojas.append(hijo_der)
 	return listaHojas
-
 def Tableaux(f):
 
 	# Algoritmo de creacion de tableau a partir de lista_hojas
