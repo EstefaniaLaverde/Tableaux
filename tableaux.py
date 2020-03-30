@@ -124,13 +124,10 @@ def no_literales(l):
 	# solo literales
 	# Input: l, una lista de fórmulas como árboles
 	# Output: None/f, tal que f no es literal
-	count=1
 	for formula in l:
 		if es_literal(formula)== False: #Si no es literal
-			print(formula)
-			break
-		else:
-			print("Sigo Viva")
+			return formula
+
 	return False
 
 
@@ -162,8 +159,6 @@ def clasifica_y_extiende(f):
 	# Input: f, una fórmula como árbol
 	# Output: no tiene output, pues modifica la variable global listaHojas
 	global listaHojas
-	listaHojas=[[f]]
-	print(imprime_hoja(listaHojas[0]))
 	clasificacion = alfa_beta(f)
 	if clasificacion=='HOJA':
 		listaHojas.remove([f])
@@ -208,28 +203,29 @@ def clasifica_y_extiende(f):
 	  	listaHojas.remove([f])
 	  	listaHojas.append(hijo_izq)
 	  	listaHojas.append(hijo_der)
-	return listaHojas
-def Tableaux(f):
 
+
+def Tableaux(f):
 	# Algoritmo de creacion de tableau a partir de lista_hojas
 	# Imput: - f, una fórmula como string en notación polaca inversa
 	# Output: interpretaciones: lista de listas de literales que hacen
 	# verdadera a f
+	global listaHojas
+	global listaInterpsVerdaderas
+
 	A = StringtoTree(f)
 	listaHojas = [[A]]
-	while len(listaHojas) > 0:
-		hojas = choice(listaHojas)
-		if not no_literales(hojas):
-			for tree in hojas:
-				clasifica_y_extiende(tree)
-		else:
-			if par_complementario(hojas):
-				listaHojas.remove(hojas)
+	clasifica_y_extiende(A)
+	while len(listaHojas)>0:
+		for q in listaHojas:
+			if not no_literales(q):
+				if par_complementario(q):
+					listaHojas.remove(q)
+				else:
+					listaInterpsVerdaderas.append(q)
+					listaHojas.remove(q)
 			else:
-				listaInterpsVerdaderas.append(hojas)
-				listaHojas.remove(hojas)
+				clasifica_y_extiende(no_literales(q))
+
 	return listaInterpsVerdaderas
 
-lista=[Tree("q",None,None), Tree("-", None, Tree("-",None,Tree("q",None,None))),Tree("r",None,None)]
-a=par_complementario(lista)
-print(a)
